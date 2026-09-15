@@ -1,0 +1,84 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ink: #0e0f0c;
+  --color-surface: #171915;
+  --color-line: #2a2c27;
+  --color-bone: #ecebe4;
+  --color-muted: #a3a399;
+  --color-accent: #c8f560;
+  --color-accent-hover: #d8fa8a;
+
+  --text-display: clamp(2.75rem, 1.5rem + 6vw, 7rem);
+  --text-display--line-height: 0.95;
+  --text-display--letter-spacing: -0.04em;
+  --text-title: clamp(2.25rem, 1.5rem + 3.2vw, 4.5rem);
+  --text-title--line-height: 1;
+  --text-title--letter-spacing: -0.03em;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@theme inline {
+  --font-sans: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+}
+
+:root {
+  --header-height: 4rem;
+  color-scheme: dark;
+}
+
+html {
+  background-color: var(--color-ink);
+  color: var(--color-bone);
+  scroll-padding-top: var(--header-height);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+::selection {
+  background-color: var(--color-accent);
+  color: var(--color-ink);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* Reveal targets are hidden only when JS runs and motion is allowed (see layout head script). */
+.motion-ok [data-reveal],
+.motion-ok [data-word] {
+  opacity: 0;
+}
+
+/*
+  Page-load intro runs in CSS, not GSAP, so the headline paints (and counts as LCP)
+  without waiting for JS to hydrate. Stagger comes from --i (word index) and --delay.
+*/
+@keyframes intro-rise {
+  from {
+    opacity: 0;
+    transform: translateY(var(--intro-offset, 0.35em));
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.motion-ok [data-intro] [data-word],
+.motion-ok [data-intro-item] {
+  animation: intro-rise 1s var(--ease-out-expo) both;
+  animation-delay: calc(var(--delay, 0ms) + var(--i, 0) * 60ms);
+}
+
+.motion-ok [data-intro-item] {
+  --intro-offset: 1rem;
+}
